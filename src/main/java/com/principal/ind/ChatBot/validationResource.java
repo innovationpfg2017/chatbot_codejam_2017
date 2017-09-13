@@ -29,74 +29,23 @@ public class validationResource {
 
 		int count = 0;
 		ObjectMapper mapper = new ObjectMapper();
-		Example javaObject = new Example();
+		String notAuthorized = "You are not Authorized";
+		String authorized = "You are Authorized";
+		Example javaObject =mapper.readValue(jsonString, Example.class);
+		Parameters parameters = new Parameters();
 		WebhookResponse webHookRespnse = null;
-		javaObject = mapper.readValue(jsonString, Example.class);
+		parameters = javaObject.getResult().getParameters();
 		
-		if(javaObject.getResult().getAction().equals("NameEmailValidation")){
 			Class.forName("org.postgresql.Driver");
 			Connection connection = getConnection();
 			Statement stmt = connection.createStatement();
-			String insuredName = javaObject.getResult().getParameters().getClientName().toLowerCase();
-			String insuredEmail = javaObject.getResult().getParameters().getClientName();
-			String speechValidPrefix = "Thanks ";
-			String speechValidSuffix = " ,to Validate you in our systems, Please give me your phone number as well as your birthdate";
-			String name = "";
-			String speechInvalid = "Unfortunatly we were unable to verify your identity online, Do you want to give another try?";
-			ResultSet rs=stmt.executeQuery("select insured_name from POLICY_DETAILS where insured_name = "+"'"+insuredName+"'"+"and insured_email= "+"'"+insuredEmail+"'" );  
-			while(rs.next()){ 
-				count++;
-				name = rs.getString(1);
+			String query = "SELECT * from User where \"contractNo\" =" + parameters.getContractNo();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				 if(parameters.getBirthDate() != rs.getDate(4)) {
+					webHookRespnse.setDisplayText(notAuthorized);
+				} 
 			}
-			
-			if(count>0){
-				webHookRespnse = new WebhookResponse(speechValidPrefix+name+speechValidSuffix, speechValidPrefix+name+speechValidSuffix);
-			}else{
-				webHookRespnse = new WebhookResponse(speechInvalid, speechInvalid);
-			}
-			rs.close();
-			connection.close(); 
-	
-		}else if(javaObject.getResult().getAction().equals("ValidatePolicyNumber")){
-			Class.forName("org.postgresql.Driver");
-			Connection connection = getConnection();
-			Statement stmt = connection.createStatement();
-			int insuredPolicy = javaObject.getResult().getParameters().getContractNo();
-			
-			String speechValidPrefix = "Perfect! ";
-			String speechValidSuffix = " Now can you confirm the name of the insured on this policy?";
-			String name = "";
-			String speechInvalid = "Unfortunatly we were unable to verify your policy details online, Do you want to give another try?";
-			ResultSet rs=stmt.executeQuery("select insured_name from POLICY_DETAILS where policy_num = "+insuredPolicy);  
-			while(rs.next()){ 
-				count++;
-				name = rs.getString(1);
-			}
-			
-			if(count>0){
-				webHookRespnse = new WebhookResponse(speechValidPrefix+speechValidSuffix, speechValidPrefix+speechValidSuffix);
-			}else{
-				webHookRespnse = new WebhookResponse(speechInvalid, speechInvalid);
-			}
-			rs.close();
-			connection.close(); 
-		}
-		else if(javaObject.getResult().getAction().equals("CheckIfMinor")) {
-			String beneficicaryBirthdate = javaObject.getResult().getParameters().getBirthDate().toString();
-			System.out.println("Bene Bdate:"+beneficicaryBirthdate);
-			String year = beneficicaryBirthdate.substring(0,4);
-			System.out.println(year);
-			Integer beneBirthyYear= Integer.parseInt(year);
-			System.out.println(beneBirthyYear);
-			String BeneMinor = "Looks like your beneficiary is minor";
-			String BeneNotMinor = "Sorry, we currently provide this facility only if beneficiary is minor.Thanks for contacting Principal";
-			if ((Calendar.getInstance().get(Calendar.YEAR) - beneBirthyYear) < 18) {
-				webHookRespnse = new WebhookResponse(BeneMinor, BeneMinor);
-			}
-			else {
-				webHookRespnse = new WebhookResponse(BeneNotMinor, BeneNotMinor);
-			}
-		}
 		return webHookRespnse;
 
 	}

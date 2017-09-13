@@ -34,28 +34,31 @@ public class validationResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public WebhookResponse processRequests(String jsonString) throws Exception{
 
+		Class.forName("org.postgresql.Driver");
+		Connection connection = getConnection();
 		ObjectMapper mapper = new ObjectMapper();
 		Example javaObject =mapper.readValue(jsonString, Example.class);
 		Parameters parameters = new Parameters();
 		WebhookResponse webHookResponse = null;
 		parameters = javaObject.getResult().getContexts().get(0).getParameters();
 		if(javaObject.getResult().getAction().equalsIgnoreCase("authorizeUser")){
-			webHookResponse = authorizeUser(parameters);
+			webHookResponse = authorizeUser(parameters, connection);
+		}else if(javaObject.getResult().getAction().equalsIgnoreCase("processLoan")){
+			webHookResponse = insertIntoTransactionDB(parameters, connection);
 		}
 		return webHookResponse;
 
 	}
 
 
-	private WebhookResponse authorizeUser(Parameters parameters)
+	private WebhookResponse authorizeUser(Parameters parameters, Connection connection)
 			throws ClassNotFoundException, Exception, SQLException {
 		WebhookResponse webHookResponse;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		webHookResponse = new WebhookResponse(UNAUTHORIZED, UNAUTHORIZED);
 		String dob = formatter.format(parameters.getBirthDate());
 		
-			Class.forName("org.postgresql.Driver");
-			Connection connection = getConnection();
+			
 			Statement stmt = connection.createStatement();
 			String query = "SELECT * FROM user_details WHERE contract_no=" + parameters.getContractNo() + " AND dob='" + dob +"'";
 			ResultSet rs = stmt.executeQuery(query);
@@ -72,8 +75,36 @@ public class validationResource {
 					webHookResponse.setSpeech(UNAUTHORIZED);
 				}
 
-}
+			}
+			rs.close();
+			stmt.close();
 		return webHookResponse;
+	}
+	
+	private WebhookResponse insertIntoTransactionDB(Parameters parameters, Connection connection) throws SQLException{
+		String query;
+		String response;
+		Statement stmt = connection.createStatement(); 
+		Integer requestCode=1;
+		if(Double.compare(parameters.getLoanAmount(), 0.0d)==0){
+			requestCode=2;
+		}
+		
+		query = "SELECT max_loan_amt FROM user_details WHERE contract_no=" + parameters.getContractNo();
+		ResultSet rs = stmt.executeQuery(query);
+		Double maxLoanAmt = null;
+		while(rs.next()){
+			maxLoanAmt = rs.getDouble(1);
+		}
+		
+		if(parameters.getLoanAmount()>maxLoanAmt){
+			response = "Requested loan amount exceeds maximum loan amount for your policy. Maximum loan amount permitted for your policy is $"+maxLoanAmt;
+			return new WebhookResponse(response, response);
+		}
+		query = "INSERT INTO transactions(contract_no, loan_amt, request_code) values ("+parameters.getContractNo()+","+parameters.getLoanAmount()+","+requestCode+")";
+		stmt.executeUpdate(query);
+		response="Do you wish to elect to have fereral or state tax withheld from any taxable portion of your proceeds?";
+		return new WebhookResponse(response, response);
 	}
 
 

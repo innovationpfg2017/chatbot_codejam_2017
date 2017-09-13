@@ -97,7 +97,7 @@ public class EmailUtility {
 
 			msg.setSentDate(new Date());
 
-			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse("nullpointers967@gmail.com", false));
+			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
 			System.out.println("Message is ready");
 			Transport.send(msg);
 

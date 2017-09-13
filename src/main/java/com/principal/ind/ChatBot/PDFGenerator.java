@@ -26,7 +26,14 @@ public class PDFGenerator {
 		Example javaObject =mapper.readValue(jsonString, Example.class);
 		Parameters parameters = new Parameters();
 		WebhookResponse webHookRespnse = null;
-		parameters = javaObject.getResult().getContexts().get(0).getParameters();
+		
+		for(Context context : javaObject.getResult().getContexts()){
+			if(context.getName().equalsIgnoreCase("user_name")){
+				parameters = context.getParameters();
+			}
+		}
+		
+		//parameters = javaObject.getResult().getContexts().get(0).getParameters();
 		
 			Class.forName("org.postgresql.Driver");
 			Connection connection = getConnection();

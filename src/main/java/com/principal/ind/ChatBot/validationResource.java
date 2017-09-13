@@ -40,7 +40,12 @@ public class validationResource {
 		Example javaObject =mapper.readValue(jsonString, Example.class);
 		Parameters parameters = new Parameters();
 		WebhookResponse webHookResponse = null;
-		parameters = javaObject.getResult().getContexts().get(0).getParameters();
+		for(Context context : javaObject.getResult().getContexts()){
+			if(context.getName().equalsIgnoreCase("user_name")){
+				parameters = context.getParameters();
+			}
+		}
+		//parameters = javaObject.getResult().getContexts().get(0).getParameters();
 		if(javaObject.getResult().getAction().equalsIgnoreCase("authorizeUser")){
 			webHookResponse = authorizeUser(parameters, connection);
 		}else if(javaObject.getResult().getAction().equalsIgnoreCase("processLoan")){

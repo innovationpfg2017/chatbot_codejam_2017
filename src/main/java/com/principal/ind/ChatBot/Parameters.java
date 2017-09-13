@@ -1,5 +1,6 @@
 package com.principal.ind.ChatBot;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -11,63 +12,96 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-"any",
-"email",
-"number",
-"date"
+"birthDate",
+"clientName",
+"contractNo",
+"loanAmount",
+"SSN",
+"zipcode"
 })
 public class Parameters {
 
-@JsonProperty("any")
-private String any;
-@JsonProperty("email")
-private String email;
+@JsonProperty("birthDate")
+private Date birthDate;
 
-@JsonProperty("number")
-private int number;
-@JsonProperty("date")
-private String date;
+@JsonProperty("clientName")
+private String clientName;
 
-@JsonProperty("number")
-public int getNumber() {
-	return number;
+@JsonProperty("contractNo")
+private int contractNo;
+
+@JsonProperty("loanAmount")
+private Double loanAmount;
+
+@JsonProperty("SSN")
+private int SSN;
+
+@JsonProperty("zipcode")
+private int zipcode;
+
+@JsonProperty("zipcode")
+public int getZipcode() {
+	return zipcode;
 }
-@JsonProperty("number")
-public void setNumber(int number) {
-	this.number = number;
+
+@JsonProperty("zipcode")
+public void setZipcode(int zipcode) {
+	this.zipcode = zipcode;
+}
+
+@JsonProperty("SSN")
+public int getSSN() {
+	return SSN;
+}
+@JsonProperty("SSN")
+public void setSSN(int sSN) {
+	SSN = sSN;
+}
+@JsonProperty("contractNo")
+public int getContractNo() {
+	return contractNo;
+}
+@JsonProperty("contractNo")
+public void setContractNo(int contractNo) {
+	this.contractNo = contractNo;
 }
 
 @JsonIgnore
 private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-@JsonProperty("any")
-public String getAny() {
-return any;
+@JsonProperty("loanAmount")
+public Double getLoanAmount() {
+return loanAmount;
 }
 
-@JsonProperty("any")
-public void setAny(String any) {
-this.any = any;
+@JsonProperty("birthDate")
+public Date getBirthDate() {
+return birthDate;
 }
 
-@JsonProperty("email")
-public String getEmail() {
-return email;
+@JsonProperty("birthDate")
+public void setBirthDate(Date birthDate) {
+this.birthDate = birthDate;
 }
 
-@JsonProperty("email")
-public void setEmail(String email) {
-this.email = email;
+@JsonProperty("clientName")
+public String getClientName() {
+return clientName;
+}
+
+@JsonProperty("clientName")
+public void setClientName(String clientName) {
+this.clientName = clientName;
 }
 
 
-@JsonProperty("date")
-public String getDate() {
-	return date;
+@JsonProperty("loanAmount")
+public Double setLoanAmount() {
+	return loanAmount;
 }
-@JsonProperty("date")
-public void setDate(String date) {
-	this.date = date;
+@JsonProperty("loanAmount")
+public void setLoanAmount(Double loanAmount) {
+	this.loanAmount = loanAmount;
 }
 @JsonAnyGetter
 public Map<String, Object> getAdditionalProperties() {

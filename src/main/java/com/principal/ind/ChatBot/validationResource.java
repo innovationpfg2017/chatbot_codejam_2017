@@ -37,8 +37,8 @@ public class validationResource {
 			Class.forName("org.postgresql.Driver");
 			Connection connection = getConnection();
 			Statement stmt = connection.createStatement();
-			String insuredName = javaObject.getResult().getParameters().getAny().toLowerCase();
-			String insuredEmail = javaObject.getResult().getParameters().getEmail().toLowerCase();
+			String insuredName = javaObject.getResult().getParameters().getClientName().toLowerCase();
+			String insuredEmail = javaObject.getResult().getParameters().getClientName();
 			String speechValidPrefix = "Thanks ";
 			String speechValidSuffix = " ,to Validate you in our systems, Please give me your phone number as well as your birthdate";
 			String name = "";
@@ -61,7 +61,7 @@ public class validationResource {
 			Class.forName("org.postgresql.Driver");
 			Connection connection = getConnection();
 			Statement stmt = connection.createStatement();
-			int insuredPolicy = javaObject.getResult().getParameters().getNumber();
+			int insuredPolicy = javaObject.getResult().getParameters().getContractNo();
 			
 			String speechValidPrefix = "Perfect! ";
 			String speechValidSuffix = " Now can you confirm the name of the insured on this policy?";
@@ -82,7 +82,7 @@ public class validationResource {
 			connection.close(); 
 		}
 		else if(javaObject.getResult().getAction().equals("CheckIfMinor")) {
-			String beneficicaryBirthdate = javaObject.getResult().getParameters().getDate();
+			String beneficicaryBirthdate = javaObject.getResult().getParameters().getBirthDate().toString();
 			System.out.println("Bene Bdate:"+beneficicaryBirthdate);
 			String year = beneficicaryBirthdate.substring(0,4);
 			System.out.println(year);
@@ -103,14 +103,14 @@ public class validationResource {
 
 
 	private static Connection getConnection() throws Exception {
-		URI dbUri = new URI("postgres://ikkwdpnxycsfmk:cd7d023968ceeb7f7e5d90fc8c40c1e29ad05d024f60007fb6ca78847c43fb65@ec2-54-163-246-154.compute-1.amazonaws.com:5432/d8gjfv40tdgpim");
+		URI dbUri = new URI("postgres://edknyzsqmgmhcl:8105f354652cf9b3de0cd7818bb4420bff0f098afdd8e650345fd222e5fae980@ec2-54-221-196-253.compute-1.amazonaws.com:5432/ddqdcgl6ng02kc");
 
 		//		String username = dbUri.getUserInfo().split(":")[0];
 		//		String password = dbUri.getUserInfo().split(":")[1];
 		//		String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
 		String username = dbUri.getUserInfo().split(":")[0];
 		String password = dbUri.getUserInfo().split(":")[1];
-		String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+		String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath()+"?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 		return DriverManager.getConnection(dbUrl, username, password);
 	}
 
@@ -123,7 +123,7 @@ public class validationResource {
 
 		Statement stmt = connection.createStatement();
 		System.out.println("getMessages() Connection done!!");
-		ResultSet rs = stmt.executeQuery("SELECT policy_num from POLICY_DETAILS");
+		ResultSet rs = stmt.executeQuery("SELECT * from bpm");
 		Integer lastValue = 0;
 		while (rs.next()) {
 			System.out.println("Read from DB: " + rs.getInt(1));

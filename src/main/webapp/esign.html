@@ -1,0 +1,30 @@
+<!doctype html>
+
+<html>
+<head>
+<script>
+function doConfirm() {
+	var contractNo = window.location.search;
+	contractNo = contractNo.replace("?cn=", '');
+	var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "https://chatbot-codejam2017.herokuapp.com/services/processPolicyAdminEsignature/" + contractNo, false);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+    var response = JSON.parse(xhttp.responseText);
+}
+
+function doDecline() {
+	var contractNo = window.location.search;
+	contractNo = contractNo.replace("?cn=", '');
+	var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "https://chatbot-codejam2017.herokuapp.com/services/declinePolicyAdminEsignature/" + contractNo, false);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send();
+    var response = JSON.parse(xhttp.responseText);
+}
+</script>
+</head>
+<H1>Please click on the confirm button if you wish to e-sign</H1>
+<button type="submit" onclick="doConfirm()">Confirm</button>
+<button type="submit" onclick="doDecline()">Decline</button>
+</html>

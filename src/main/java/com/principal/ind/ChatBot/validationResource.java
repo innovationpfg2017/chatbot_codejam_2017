@@ -45,6 +45,9 @@ public class validationResource {
 			webHookResponse = authorizeUser(parameters, connection);
 		}else if(javaObject.getResult().getAction().equalsIgnoreCase("processLoan")){
 			webHookResponse = insertIntoTransactionDB(parameters, connection);
+		}else if(javaObject.getResult().getAction().equalsIgnoreCase("withholding_response_yes.withholding_response_yes-no.Assignee_irr-no-yes")){
+			EsignatureResource esignatureResource = new EsignatureResource();
+			webHookResponse = esignatureResource.processEsignature(jsonString);
 		}
 		return webHookResponse;
 

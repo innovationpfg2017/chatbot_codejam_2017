@@ -25,8 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Path("/authorize")
 public class validationResource {
 	
-	private static  final String UNAUTHORIZED = "Unauthorized Access";
-	private static final String AUTHORIZED = "Authorization Complete";
+	private static  final String UNAUTHORIZED = "Authorization failed. Do you want to try again?";
+	private static final String AUTHORIZED = "Great! Your authorization is successful. We can proceed with your request. Please specify the loan amount you wish to apply.";
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -38,7 +38,7 @@ public class validationResource {
 		Example javaObject =mapper.readValue(jsonString, Example.class);
 		Parameters parameters = new Parameters();
 		WebhookResponse webHookRespnse = null;
-		parameters = javaObject.getResult().getParameters();
+		parameters = javaObject.getResult().getContexts().get(0).getParameters();
 		String dob = formatter.format(parameters.getBirthDate());
 		
 			Class.forName("org.postgresql.Driver");

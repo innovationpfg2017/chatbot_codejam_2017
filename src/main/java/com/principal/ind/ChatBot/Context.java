@@ -20,7 +20,7 @@ public class Context {
 @JsonProperty("name")
 private String name;
 @JsonProperty("parameters")
-private Parameters_ parameters;
+private Parameters parameters;
 @JsonProperty("lifespan")
 private Integer lifespan;
 @JsonIgnore
@@ -37,12 +37,12 @@ this.name = name;
 }
 
 @JsonProperty("parameters")
-public Parameters_ getParameters() {
+public Parameters getParameters() {
 return parameters;
 }
 
 @JsonProperty("parameters")
-public void setParameters(Parameters_ parameters) {
+public void setParameters(Parameters parameters) {
 this.parameters = parameters;
 }
 

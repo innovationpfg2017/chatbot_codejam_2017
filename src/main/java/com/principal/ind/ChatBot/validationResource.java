@@ -37,7 +37,7 @@ public class validationResource {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Example javaObject =mapper.readValue(jsonString, Example.class);
 		Parameters parameters = new Parameters();
-		WebhookResponse webHookRespnse = null;
+		WebhookResponse webHookResponse = new WebhookResponse(UNAUTHORIZED, UNAUTHORIZED);;
 		parameters = javaObject.getResult().getContexts().get(0).getParameters();
 		String dob = formatter.format(parameters.getBirthDate());
 		
@@ -52,12 +52,14 @@ public class validationResource {
 				Integer maskedSSNNo = ssnNo %10000;
 				
 				if(maskedSSNNo == parameters.getSSN()){
-					 webHookRespnse = new WebhookResponse(AUTHORIZED, AUTHORIZED);
+					webHookResponse.setDisplayText(AUTHORIZED);
+					webHookResponse.setSpeech(AUTHORIZED);
 				}else{
-					webHookRespnse = new WebhookResponse(UNAUTHORIZED, UNAUTHORIZED);
+					webHookResponse.setDisplayText(UNAUTHORIZED);
+					webHookResponse.setSpeech(UNAUTHORIZED);
 				}
 			}
-		return webHookRespnse;
+		return webHookResponse;
 
 	}
 

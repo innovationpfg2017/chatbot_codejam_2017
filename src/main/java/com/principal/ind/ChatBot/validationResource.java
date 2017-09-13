@@ -5,8 +5,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -20,31 +22,40 @@ import org.postgresql.jdbc2.AbstractJdbc2ResultSet.CursorResultHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-@Path("/validate")
+@Path("/authorize")
 public class validationResource {
+	
+	private static  final String UNAUTHORIZED = "Unauthorized Access";
+	private static final String AUTHORIZED = "Authorization Complete";
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public WebhookResponse addMessage(String jsonString) throws Exception{
+	public WebhookResponse authorizeUser(String jsonString) throws Exception{
 
-		int count = 0;
 		ObjectMapper mapper = new ObjectMapper();
-		String notAuthorized = "You are not Authorized";
-		String authorized = "You are Authorized";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Example javaObject =mapper.readValue(jsonString, Example.class);
 		Parameters parameters = new Parameters();
 		WebhookResponse webHookRespnse = null;
 		parameters = javaObject.getResult().getParameters();
+		String dob = formatter.format(parameters.getBirthDate());
 		
 			Class.forName("org.postgresql.Driver");
 			Connection connection = getConnection();
 			Statement stmt = connection.createStatement();
-			String query = "SELECT * from User where \"contractNo\" =" + parameters.getContractNo();
+			String query = "SELECT * FROM user_details WHERE contract_no=" + parameters.getContractNo() + " AND dob='" + dob +"'";
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
-				 if(parameters.getBirthDate() != rs.getDate(4)) {
-					webHookRespnse.setDisplayText(notAuthorized);
-				} 
+				
+				Integer ssnNo = rs.getInt(2);
+				Integer maskedSSNNo = ssnNo %10000;
+				
+				if(maskedSSNNo == parameters.getSSN()){
+					 webHookRespnse = new WebhookResponse(AUTHORIZED, AUTHORIZED);
+				}else{
+					webHookRespnse = new WebhookResponse(UNAUTHORIZED, UNAUTHORIZED);
+				}
 			}
 		return webHookRespnse;
 

@@ -27,7 +27,7 @@ public class EsignatureResource {
 		//pdfGenerator.generatePdf(jsonString);
 		EmailHelper emailHelper = pdfGenerator.generateFirstPdf(jsonString); 
 		String subject = "Request for Esignature";
-		String body = "Please click on following link to complete e signature: http://localhost:8080/ChatBot/esign.html?cn=" + emailHelper.getContractNo();
+		String body = "Please click on following link to complete e signature: https://chatbot-codejam2017.herokuapp.com/esign.html?cn=" + emailHelper.getContractNo();
 		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, emailHelper.isAttachmentPresent(), emailHelper.getAttachmentFileLocation());
 		
 		

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import org.postgresql.jdbc2.AbstractJdbc2ResultSet.CursorResultHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-@Path("/authorize")
+@Path("/chatservice")
 public class validationResource {
 	
 	private static  final String UNAUTHORIZED = "Authorization failed. Do you want to try again?";
@@ -31,14 +32,26 @@ public class validationResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public WebhookResponse authorizeUser(String jsonString) throws Exception{
+	public WebhookResponse processRequests(String jsonString) throws Exception{
 
 		ObjectMapper mapper = new ObjectMapper();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Example javaObject =mapper.readValue(jsonString, Example.class);
 		Parameters parameters = new Parameters();
-		WebhookResponse webHookResponse = new WebhookResponse(UNAUTHORIZED, UNAUTHORIZED);;
+		WebhookResponse webHookResponse = null;
 		parameters = javaObject.getResult().getContexts().get(0).getParameters();
+		if(javaObject.getResult().getAction().equalsIgnoreCase("authorizeUser")){
+			webHookResponse = authorizeUser(parameters);
+		}
+		return webHookResponse;
+
+	}
+
+
+	private WebhookResponse authorizeUser(Parameters parameters)
+			throws ClassNotFoundException, Exception, SQLException {
+		WebhookResponse webHookResponse;
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		webHookResponse = new WebhookResponse(UNAUTHORIZED, UNAUTHORIZED);
 		String dob = formatter.format(parameters.getBirthDate());
 		
 			Class.forName("org.postgresql.Driver");
@@ -58,9 +71,9 @@ public class validationResource {
 					webHookResponse.setDisplayText(UNAUTHORIZED);
 					webHookResponse.setSpeech(UNAUTHORIZED);
 				}
-			}
-		return webHookResponse;
 
+}
+		return webHookResponse;
 	}
 
 

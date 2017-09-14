@@ -41,7 +41,7 @@ public class DeclineEsignaturePolicyAdminResource {
 		
 	}
 	
-	public void declineEsignature(String jsonString) throws Exception{
+	public WebhookResponse declineEsignature(String jsonString) throws Exception{
 
 		System.out.println("in decline esginature");
 		
@@ -51,11 +51,12 @@ public class DeclineEsignaturePolicyAdminResource {
 		String subject = "Request for Wet Signature";
 		String body = "Since you have declined the E-signature, kindly go through the attached PDF, print the PDF, wet sign it and post it to our official office address that you can find on our website";
 		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, emailHelper.isAttachmentPresent(), emailHelper.getAttachmentFileLocation());
-		
+		String resopnse = "You will receive a mail shortly on your registered email id. Please follow the instructions given in the mail. Thank you for being our valuable customer.";
+		return new WebhookResponse(resopnse,resopnse);
 		
 	}
 	
-	public void witholdingYes(String jsonString) throws Exception{
+	public WebhookResponse witholdingYes(String jsonString) throws Exception{
 
 		System.out.println("inside witholdingYes");
 		
@@ -65,7 +66,9 @@ public class DeclineEsignaturePolicyAdminResource {
 		EmailHelper emailHelper = pdfGenerator.generateFirstPdf(jsonString); 
 		String subject = "Request for Wet Signature";
 		String body = "Since your policy has either Assignee or Irrevocable beneficiary, your application could not be processed online. Please take the printout of the attached document and send us the signed document.";
-		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, emailHelper.isAttachmentPresent(), emailHelper.getAttachmentFileLocation());	
+		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, emailHelper.isAttachmentPresent(), emailHelper.getAttachmentFileLocation());
+		String resopnse = "You will receive a mail shortly on your registered email id. Please follow the instructions given in the mail. Thank you for being our valuable customer.";
+		return new WebhookResponse(resopnse,resopnse);
 	}
 	
 	private static Connection getConnection() throws Exception {

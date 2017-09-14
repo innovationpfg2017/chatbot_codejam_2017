@@ -53,15 +53,15 @@ public class validationResource {
 			webHookResponse = insertIntoTransactionDB(parameters, connection);
 		}else if(javaObject.getResult().getAction().equalsIgnoreCase("withholding_response_yes.withholding_response_yes-no.Assignee_irr-no-yes")){
 			EsignatureResource esignatureResource = new EsignatureResource();
-			esignatureResource.processEsignature(jsonString);
+			webHookResponse = esignatureResource.processEsignature(jsonString);
 		}
 		else if(javaObject.getResult().getAction().equalsIgnoreCase("withholding_response_yes.withholding_response_yes-yes")){
 			DeclineEsignaturePolicyAdminResource declineEsignaturePolicyAdminResource = new DeclineEsignaturePolicyAdminResource();
-			declineEsignaturePolicyAdminResource.witholdingYes(jsonString);
+			webHookResponse = declineEsignaturePolicyAdminResource.witholdingYes(jsonString);
 		}
 		else if(javaObject.getResult().getAction().equalsIgnoreCase("withholding_response_yes.withholding_response_yes-no.Assignee_irr-no-no")){
 			DeclineEsignaturePolicyAdminResource declineEsignaturePolicyAdminResource = new DeclineEsignaturePolicyAdminResource();
-			declineEsignaturePolicyAdminResource.declineEsignature(jsonString);
+			webHookResponse = declineEsignaturePolicyAdminResource.declineEsignature(jsonString);
 		}
 		connection.close();
 		return webHookResponse;

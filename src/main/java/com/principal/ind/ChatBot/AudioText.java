@@ -31,8 +31,8 @@ public class AudioText {
 		SpeechToText service = new SpeechToText();
 		service.setUsernameAndPassword("cfd674d6-7138-4ef8-83bf-a4b23d9a84b5", "081hgBr0Rb7E");
 		
-		//ClassLoader cl = getClass().getClassLoader();
-		File file = new File("src/main/resource/audio.mp3");
+		ClassLoader cl = getClass().getClassLoader();
+		File file = new File(cl.getResource("audio.mp3").getFile());
 		SpeechResults transcript = service.recognize(file).execute();
 		String response = transcript.getResults().get(0).getAlternatives().get(0).getTranscript();
 		System.out.println(response);

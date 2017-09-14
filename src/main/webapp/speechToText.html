@@ -15,9 +15,10 @@
 </script>
 <script>
 	function speechToText() {
+		alert("Thank you! Your request shall be complete within few seconds. Please check your email for the confirmation of your request completion");
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("POST",
-				"https://chatbot-codejam2017.herokuapp.com/services/speechToText", false);
+				"http://localhost:8080/ChatBot/services/speechToText", false);
 		xhttp.setRequestHeader("Content-type", "application/json");
 		xhttp.send();
 		var response = JSON.parse(xhttp.responseText);

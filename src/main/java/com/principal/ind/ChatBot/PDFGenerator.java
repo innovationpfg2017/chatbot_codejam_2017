@@ -170,6 +170,9 @@ public EmailHelper generateDeclinePdf(String contractNo) throws Exception{
 		      
 		      EmailHelper emailHelper = new EmailHelper(emailId, true, "nullpointers.pdf");
 		      emailHelper.setContractNo(Integer.parseInt(contractNo));
+		      rs.close();
+		      stmt.close();
+		      connection.close();
 		      return emailHelper;
 		   }
 		   catch (IOException ioEx)

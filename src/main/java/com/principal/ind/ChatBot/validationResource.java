@@ -63,6 +63,7 @@ public class validationResource {
 			DeclineEsignaturePolicyAdminResource declineEsignaturePolicyAdminResource = new DeclineEsignaturePolicyAdminResource();
 			declineEsignaturePolicyAdminResource.declineEsignature(jsonString);
 		}
+		connection.close();
 		return webHookResponse;
 
 	}
@@ -121,6 +122,8 @@ public class validationResource {
 		query = "INSERT INTO transactions(contract_no, loan_amt, request_code) values ("+parameters.getContractNo()+","+parameters.getLoanAmount()+","+requestCode+")";
 		stmt.executeUpdate(query);
 		response="Do you wish to elect to have federal or state tax withheld from any taxable portion of your proceeds?";
+		rs.close();
+		stmt.close();
 		return new WebhookResponse(response, response);
 	}
 

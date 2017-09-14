@@ -2,31 +2,77 @@
 
 <html>
 <head>
+<link
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+<link href="css/stylesheet.css" rel="stylesheet">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
 <script>
-function doConfirm() {
-	var contractNo = window.location.search;
-	contractNo = contractNo.replace("?cn=", '');
-	var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "https://chatbot-codejam2017.herokuapp.com/services/processPolicyAdminEsignature/" + contractNo, false);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
-    var response = JSON.parse(xhttp.responseText);
-    alert("Thank you! Your loan request shall be complete within few seconds. Please check your email for the confirmation of your loan request completion");
-}
+	function doConfirm() {
+		alert("Thank you! Your loan request shall be complete within few seconds. Please check your email for the confirmation of your loan request completion");
+		var contractNo = window.location.search;
+		contractNo = contractNo.replace("?cn=", '');
+		var xhttp = new XMLHttpRequest();
+		xhttp
+				.open(
+						"POST",
+						"https://chatbot-codejam2017.herokuapp.com/services/processPolicyAdminEsignature/"
+								+ contractNo, false);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		xhttp.send();
+		var response = JSON.parse(xhttp.responseText);
+		
+	}
 
-function doDecline() {
-	var contractNo = window.location.search;
-	contractNo = contractNo.replace("?cn=", '');
-	var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "https://chatbot-codejam2017.herokuapp.com/services/declinePolicyAdminEsignature/" + contractNo, false);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send();
-    var response = JSON.parse(xhttp.responseText);
-    alert("No Problem! Please follow further instructions that you would have received on your email.");
-}
+	function doDecline() {
+		alert("No Problem! Please follow further instructions that you would have received on your email.");
+		var contractNo = window.location.search;
+		contractNo = contractNo.replace("?cn=", '');
+		var xhttp = new XMLHttpRequest();
+		xhttp
+				.open(
+						"POST",
+						"https://chatbot-codejam2017.herokuapp.com/services/declinePolicyAdminEsignature/"
+								+ contractNo, false);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		xhttp.send();
+		var response = JSON.parse(xhttp.responseText);
+	}
 </script>
 </head>
-<H1>Please click on the confirm button if you wish to e-sign</H1>
-<button type="submit" onclick="doConfirm()">Confirm</button>
-<button type="submit" onclick="doDecline()">Decline</button>
+<body>
+	<nav class="navbar navbar-default" style="background:rgba(63, 113, 255, 0.68);">
+		<div class="container-fluid" style="text-align:center;">
+			<!-- Brand and toggle get grouped for better mobile display -->
+				<h2 class="brand_header">NullPointers Financial Services</h2>
+		</div>
+		<!-- /.navbar-collapse -->
+	</nav>
+	<div class="container">
+		<div class="row alert alert-info" role="alert">
+			<h3>&nbsp;&nbsp;&nbsp;<b>NOTE</b></h3>
+			<ul style="font-size:17px;">
+			<li>Using eSignature you can digitally sign your request.</li>
+			<li>On Accepting, your request will be sent for processing immediately.</li>
+			<li>After successful processing, confirmation mail will be sent to your registered email id.</li>
+			</ul>	
+		</div>
+		<div class="row">
+				<h3>Please provide your response for eSignature:</h3>
+					<button class="btn btn-lg btn-primary" type="submit" onclick="doConfirm()">Accept</button>
+					
+					<button class="btn btn-lg btn-danger" type="submit" onclick="doDecline()">Decline</button>
+
+		</div>
+		<div class="row">
+			<h5>By clicking <b>Accept</b>, you agree to further process your service request. </h5>
+			<h5>By clicking <b>Decline</b>, an email will be sent to you for Wet Signature.</h5>		
+		</div>
+	</div>
+</body>
 </html>

@@ -64,7 +64,7 @@ public class DeclineEsignaturePolicyAdminResource {
 		//pdfGenerator.generatePdf(jsonString);
 		EmailHelper emailHelper = pdfGenerator.generateFirstPdf(jsonString); 
 		String subject = "Request for Wet Signature";
-		String body = "Since you have elected to have federal or state tax withheld from your taxable portion of your proceeds, Please take a printout of the attached PDF, wet sign it and post it to our official office address that you can find on our website";
+		String body = "Since your policy has either Assignee or Irrevocable beneficiary, your application could not be processed online. Please take the printout of the attached document and send us the signed document.";
 		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, emailHelper.isAttachmentPresent(), emailHelper.getAttachmentFileLocation());	
 	}
 	

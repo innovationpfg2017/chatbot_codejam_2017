@@ -11,6 +11,7 @@ function doConfirm() {
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send();
     var response = JSON.parse(xhttp.responseText);
+    alert("Thank you! Your loan request shall be complete within few seconds. Please check your email for the confirmation of your loan request completion");
 }
 
 function doDecline() {
@@ -21,6 +22,7 @@ function doDecline() {
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send();
     var response = JSON.parse(xhttp.responseText);
+    alert("No Problem! Please follow further instructions that you would have received on your email.");
 }
 </script>
 </head>

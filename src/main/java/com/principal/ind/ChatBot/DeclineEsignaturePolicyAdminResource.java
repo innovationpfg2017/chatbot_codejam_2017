@@ -33,12 +33,39 @@ public class DeclineEsignaturePolicyAdminResource {
 		
 		//EmailHelper emailHelper = new EmailHelper(emailId, false, null);
 		String subject = "Wet Signature required";
-		String body = "Since you have declined the E-signature, kindly go through the PDF, print the PDF, wet sign it adn send it to our official office address";
+		String body = "Since you have declined the E-signature, kindly go through the attached PDF, print the PDF, wet sign it and send it to our official office address";
 		PDFGenerator pdfGenerator = new PDFGenerator();
 		EmailHelper emailHelper = pdfGenerator.generateDeclinePdf(contractNo);
 		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, true, emailHelper.getAttachmentFileLocation());
 		
 		
+	}
+	
+	public void declineEsignature(String jsonString) throws Exception{
+
+		System.out.println("in decline esginature");
+		
+		PDFGenerator pdfGenerator = new PDFGenerator();
+		//pdfGenerator.generatePdf(jsonString);
+		EmailHelper emailHelper = pdfGenerator.generateFirstPdf(jsonString); 
+		String subject = "Request for Wet Signature";
+		String body = "Since you have declined the E-signature, kindly go through the attached PDF, print the PDF, wet sign it and post it to our official office address that you can find on our website";
+		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, emailHelper.isAttachmentPresent(), emailHelper.getAttachmentFileLocation());
+		
+		
+	}
+	
+	public void witholdingYes(String jsonString) throws Exception{
+
+		System.out.println("inside witholdingYes");
+		
+
+		PDFGenerator pdfGenerator = new PDFGenerator();
+		//pdfGenerator.generatePdf(jsonString);
+		EmailHelper emailHelper = pdfGenerator.generateFirstPdf(jsonString); 
+		String subject = "Request for Wet Signature";
+		String body = "Since you have elected to have federal or state tax withheld from your taxable portion of your proceeds, Please take a printout of the attached PDF, wet sign it and post it to our official office address that you can find on our website";
+		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, emailHelper.isAttachmentPresent(), emailHelper.getAttachmentFileLocation());	
 	}
 	
 	private static Connection getConnection() throws Exception {

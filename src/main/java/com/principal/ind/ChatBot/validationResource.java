@@ -45,6 +45,7 @@ public class validationResource {
 				parameters = context.getParameters();
 			}
 		}
+								
 		//parameters = javaObject.getResult().getContexts().get(0).getParameters();
 		if(javaObject.getResult().getAction().equalsIgnoreCase("authorizeUser")){
 			webHookResponse = authorizeUser(parameters, connection);
@@ -53,6 +54,14 @@ public class validationResource {
 		}else if(javaObject.getResult().getAction().equalsIgnoreCase("withholding_response_yes.withholding_response_yes-no.Assignee_irr-no-yes")){
 			EsignatureResource esignatureResource = new EsignatureResource();
 			webHookResponse = esignatureResource.processEsignature(jsonString);
+		}
+		else if(javaObject.getResult().getAction().equalsIgnoreCase("withholding_response_yes.withholding_response_yes-yes")){
+			DeclineEsignaturePolicyAdminResource declineEsignaturePolicyAdminResource = new DeclineEsignaturePolicyAdminResource();
+			declineEsignaturePolicyAdminResource.witholdingYes(jsonString);
+		}
+		else if(javaObject.getResult().getAction().equalsIgnoreCase("withholding_response_yes.withholding_response_yes-no.Assignee_irr-no-no")){
+			DeclineEsignaturePolicyAdminResource declineEsignaturePolicyAdminResource = new DeclineEsignaturePolicyAdminResource();
+			declineEsignaturePolicyAdminResource.declineEsignature(jsonString);
 		}
 		return webHookResponse;
 
@@ -111,7 +120,7 @@ public class validationResource {
 		}
 		query = "INSERT INTO transactions(contract_no, loan_amt, request_code) values ("+parameters.getContractNo()+","+parameters.getLoanAmount()+","+requestCode+")";
 		stmt.executeUpdate(query);
-		response="Do you wish to elect to have fereral or state tax withheld from any taxable portion of your proceeds?";
+		response="Do you wish to elect to have federal or state tax withheld from any taxable portion of your proceeds?";
 		return new WebhookResponse(response, response);
 	}
 

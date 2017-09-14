@@ -49,9 +49,9 @@ public class EsignatureResource {
 		query = "INSERT into bpm (work_id, contract_no, esignature, task_status) values (" + workid + comma + emailHelper.getContractNo() + comma + no + comma + pending + ")" ;
 		int result = stmt.executeUpdate(query);
 		System.out.println("bpm table updated");
+		String resopnse = "You will receive a mail shortly on your registered mail id. Please follow the instructions given in the mail to confirm the change. Thank you for being our valuable customer.";
 		
-		
-		WebhookResponse webHookRespnse = new WebhookResponse("Email has been sent", "Email has been sent");
+		WebhookResponse webHookRespnse = new WebhookResponse(resopnse,resopnse);
 		rs.close();
 		stmt.close();
 		connection.close();

@@ -14,11 +14,11 @@
 	crossorigin="anonymous">
 </script>
 <script>
-	function readEmail() {
+	function speechToText() {
 		window.confirm("Thank you! Your request shall be complete within few seconds. Please check your email for the confirmation of your request completion");
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("POST",
-				"https://chatbot-codejam2017.herokuapp.com/services/readEmail", false);
+				"https://chatbot-codejam2017.herokuapp.com/services/speechToText", false);
 		xhttp.setRequestHeader("Content-type", "application/json");
 		xhttp.send();
 		var response = JSON.parse(xhttp.responseText);
@@ -38,12 +38,12 @@
 		<div class="row alert alert-info" role="alert">
 			<h3>&nbsp;&nbsp;&nbsp;<b>NOTE</b></h3>
 			<ul style="font-size:17px;">
-			<li>Simulation of the email parser.</li>
+			<li>Simulation of the Speech To Text Automatic Processing.</li>
 			</ul>	
 		</div>
 		<div class="row">
 				<h3>Please click on the button below to start the process:</h3>
-					<button class="btn btn-lg btn-primary" type="submit" onclick="readEmail()">Process</button>
+					<button class="btn btn-lg btn-primary" type="submit" onclick="speechToText()">Process</button>
 		</div>
 	</div>
 </body>

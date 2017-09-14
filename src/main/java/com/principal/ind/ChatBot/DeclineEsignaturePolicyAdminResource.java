@@ -33,7 +33,7 @@ public class DeclineEsignaturePolicyAdminResource {
 		
 		//EmailHelper emailHelper = new EmailHelper(emailId, false, null);
 		String subject = "Wet Signature required";
-		String body = "Since you have declined the E-signature, kindly go through the attached PDF, print the PDF, wet sign it and send it to our official office address";
+		String body = "Since you have declined the E-signature, kindly go through the attached PDF, print the PDF, wet sign it and send it to our official address";
 		PDFGenerator pdfGenerator = new PDFGenerator();
 		EmailHelper emailHelper = pdfGenerator.generateDeclinePdf(contractNo);
 		EmailUtility.sendEmail(emailHelper.getToEmailId(), subject, body, true, emailHelper.getAttachmentFileLocation());

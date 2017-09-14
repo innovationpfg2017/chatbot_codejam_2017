@@ -14,7 +14,7 @@
 	crossorigin="anonymous"></script>
 <script>
 	function doConfirm() {
-		alert("Thank you! Your loan request shall be complete within few seconds. Please check your email for the confirmation of your loan request completion");
+		window.confirm("Thank you! Your loan request shall be complete within few seconds. Please check your email for the confirmation of your loan request completion");
 		var contractNo = window.location.search;
 		contractNo = contractNo.replace("?cn=", '');
 		var xhttp = new XMLHttpRequest();
@@ -26,12 +26,10 @@
 		xhttp.setRequestHeader("Content-type", "application/json");
 		xhttp.send();
 		var response = JSON.parse(xhttp.responseText);
-		
 	}
 
 	function doDecline() {
-		alert("No Problem! Please follow further instructions that you would have received on your email.");
-		var contractNo = window.location.search;
+		 var contractNo = window.location.search;
 		contractNo = contractNo.replace("?cn=", '');
 		var xhttp = new XMLHttpRequest();
 		xhttp
@@ -41,7 +39,8 @@
 								+ contractNo, false);
 		xhttp.setRequestHeader("Content-type", "application/json");
 		xhttp.send();
-		var response = JSON.parse(xhttp.responseText);
+		var response = JSON.parse(xhttp.responseText); 
+		window.confirm("No Problem! Please follow further instructions that you would have received on your email.");
 	}
 </script>
 </head>

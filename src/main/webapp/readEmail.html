@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html>
+<head>
+
+<script>
+	function readEmail() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("POST",
+				"https://chatbot-codejam2017.herokuapp.com/services/readEmail", false);
+		xhttp.setRequestHeader("Content-type", "application/json");
+		xhttp.send();
+		var response = JSON.parse(xhttp.responseText);
+	}
+
+</script>
+</head>
+<body>
+	
+			<H1></H1>
+			<button type="submit" onclick="readEmail()">Read Email</button>
+		</div>
+	</div>
+
+</body>
+</html>

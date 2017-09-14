@@ -3,7 +3,7 @@ package com.principal.ind.ChatBot;
 public class AddressHelper {
 	String name;
 	String newAddress;
-	
+	String contractNo;
 	
 	public String getName() {
 		return name;
@@ -16,5 +16,11 @@ public class AddressHelper {
 	}
 	public void setNewAddress(String newAddress) {
 		this.newAddress = newAddress;
+	}
+	public String getContractNo() {
+		return contractNo;
+	}
+	public void setContractNo(String contractNo) {
+		this.contractNo = contractNo;
 	}
 }

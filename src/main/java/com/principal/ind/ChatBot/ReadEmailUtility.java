@@ -70,7 +70,10 @@ public static void check()
          System.out.println("From: " + message.getFrom()[0]);
          System.out.println("Text: " + getTextFromMessage(message));
          String from = InternetAddress.toString(message.getFrom());
-         if (getTextFromMessage(message).contains("address") && getTextFromMessage(message).contains("change")) {
+         if ((getTextFromMessage(message).toLowerCase().contains("address") && getTextFromMessage(message).toLowerCase().contains("change")) 
+        		 || (getTextFromMessage(message).toLowerCase().contains("chg") && getTextFromMessage(message).toLowerCase().contains("my") && getTextFromMessage(message).toLowerCase().contains("add")
+        				 || (getTextFromMessage(message).toLowerCase().contains("new") && getTextFromMessage(message).toLowerCase().contains("address")
+        						 || getTextFromMessage(message).toLowerCase().contains("mailing") && getTextFromMessage(message).toLowerCase().contains("add")))) {
         	 Date date = null;
         	 date = message.getSentDate();
              // Get all the information from the message
@@ -78,35 +81,38 @@ public static void check()
              if (from != null) {
                 System.out.println("From: " + from);
              }
-             String body = "\n\n" + "Name:" + "\n" + "Old Address:" + "\n" + "New Address:";
+             String body = "\n\n" + "Contract No:" + "\n"+ "Name:" + "\n" + "Old Address:" + "\n" + "Updated Address:";
             	 
-             EmailUtility.sendEmail(from, "Address Change information needed", "In order to process your address change request, Please enter the following information in the specified format below." + body, false, null);
-         } else if (getTextFromMessage(message).contains("Name") && getTextFromMessage(message).contains("Old Address") && getTextFromMessage(message).contains("New Address")) {
+             EmailUtility.sendEmail(from, " More Information needed", "In order to process your request, Please enter the following information in the specified format below." + body, false, null);
+         } else if (getTextFromMessage(message).contains("Name") && getTextFromMessage(message).contains("Old Address") && getTextFromMessage(message).contains("Updated Address")) {
         	String text = getTextFromMessage(message);
         	String[] emailContents = StringUtils.split(text, "\n");
-        	String nameContents = emailContents[0];
-        	String oldAddressContent = emailContents[1];
-        	String newAddressContent = emailContents[2];
+        	String contractNoContents = emailContents[0];
+        	String nameContents = emailContents[1];
+        	String newAddressContent = emailContents[3];
         	AddressHelper addressHelper = new AddressHelper();
         	
+        	String[] fullContractNoContents = StringUtils.split(contractNoContents, ":");
         	String[] fullNameContents = StringUtils.split(nameContents, ":");
-        	String[] fullOldAddress = StringUtils.split(oldAddressContent, ":");
         	String[] fullNewAddress = StringUtils.split(newAddressContent, ":");
         		
         	addressHelper.setName(fullNameContents[1].replace("\r", "").trim());
         	addressHelper.setNewAddress(fullNewAddress[1].replace("\r", "").trim());
+        	addressHelper.setContractNo(fullContractNoContents[1].replace("\r", "").trim());
         	
         	System.out.println(addressHelper.getName() + addressHelper.getNewAddress());
         	
         	
         	 
-        	 if(updateAddress(addressHelper.getName(), addressHelper.getNewAddress())!=0){
+        	 if(updateAddress(addressHelper.getContractNo(),addressHelper.getName(), addressHelper.getNewAddress())!=0){
         		 EmailUtility.sendEmail(from, "Address Changed Confirmation", "Your address has been changed in our system to '" + addressHelper.getNewAddress() + "'" + "\n\n Have a Nice Day!", false, null);
         	 }
         	 else{
         		 EmailUtility.sendEmail(from, "Address Change Failure Notification", "Sorry, we were unable to process your address change request. Please get in touch with our representatives for further help.", false, null);
         	 }
         	 
+         } else {
+        	 EmailUtility.sendEmail(from, "Unable to process request", "Sorry, Currently we are unable to process  your request. Please get in touch with our representatives for further help.", false, null);
          }
 
       }
@@ -126,11 +132,11 @@ public static void check()
       }
    }
 
-public static int updateAddress(String name, String newAddress) throws Exception{
+public static int updateAddress(String contractNo,String name, String newAddress) throws Exception{
 	Class.forName("org.postgresql.Driver");
 	Connection connection = getConnection();
 	Statement stmt = connection.createStatement();
-	String query = "SELECT name from user_details where name = '" + name + "'";		
+	String query = "SELECT name from user_details where name = '" + name + "' and contract_no = " + contractNo ;		
 	ResultSet rs = stmt.executeQuery(query);
 	int res = 0;
 	if(rs.next()){
@@ -142,7 +148,7 @@ public static int updateAddress(String name, String newAddress) throws Exception
 		 
 		
 		newAddress = "'" + newAddress + "'";
-		query = "UPDATE user_details set address = " + newAddress + " where name = '" + name + "'";
+		query = "UPDATE user_details set address = " + newAddress + " where name = '" + name + "' and contract_no = " + contractNo;
 		res = stmt.executeUpdate(query);
 		stmt.close();
 		rs.close();
